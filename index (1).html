@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="集客用サンプルLP（ポートフォリオ用）。6業界をワンクリックで切り替えできる1ページ完結テンプレート。">
+<title>集客LPサンプル｜6業界切替テンプレート（ポートフォリオ用）</title>
+<style>
+  /* 配色・角丸・見出しの質感はすべてCSS変数で管理。業界切替でJSがまとめて差し替える */
+  :root{
+    --brand:#2e9e5b; --brand-dark:#14663a; --accent:#ff8a00; --accent-ink:#fff;
+    --tint:#f1faf4; --ink:#1b2430; --muted:#5b6675; --line:#e6ebf1; --card:#fff;
+    --radius:18px; --h-weight:900; --h-tracking:.01em;
+    --shadow:0 14px 40px rgba(20,30,45,.10); --shadow-sm:0 4px 16px rgba(20,30,45,.07);
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Noto Sans JP","Yu Gothic",Meiryo,sans-serif;color:var(--ink);background:#fff;line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:hidden;transition:background .3s ease}
+  a{color:inherit;text-decoration:none}
+  .wrap{width:min(1100px,92%);margin-inline:auto}
+  .section{padding:clamp(48px,7vw,76px) 0}
+  .tint{background:var(--tint)}
+  .center{text-align:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:12.5px;font-weight:800;letter-spacing:.12em;color:var(--brand);background:color-mix(in srgb,var(--brand) 12%,#fff);padding:7px 15px;border-radius:999px;margin-bottom:16px}
+  .eyebrow::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+  h2.sec-title{font-size:clamp(23px,4.6vw,33px);line-height:1.38;font-weight:var(--h-weight);letter-spacing:var(--h-tracking)}
+  .sec-lead{color:var(--muted);font-size:15px;margin-top:10px;max-width:640px;margin-inline:auto}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font-weight:800;font-size:16px;border-radius:999px;padding:15px 26px;cursor:pointer;border:none;white-space:nowrap;transition:transform .15s ease,box-shadow .2s ease,background .2s}
+  .btn:active{transform:translateY(1px)}
+  .btn:focus-visible{outline:3px solid color-mix(in srgb,var(--brand) 45%,#fff);outline-offset:2px}
+  .btn-primary{background:var(--accent);color:var(--accent-ink);box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 42%,transparent)}
+  .btn-primary:hover{transform:translateY(-2px)}
+  .btn-line{background:#06c755;color:#fff;box-shadow:0 10px 24px rgba(6,199,85,.32)}
+  .btn-line:hover{transform:translateY(-2px)}
+  .btn-ghost{background:#fff;color:var(--brand);border:2px solid color-mix(in srgb,var(--brand) 28%,#fff)}
+  .btn-ghost:hover{background:var(--tint)}
+  .ribbon{background:#111820;color:#cfd7e0;font-size:12px;text-align:center;padding:7px 12px;letter-spacing:.02em}
+  .ribbon b{color:#fff}
+  .switcher{background:var(--brand-dark);transition:background .3s}
+  .switcher-in{display:flex;gap:8px;padding:11px 0;overflow-x:auto;scrollbar-width:none}
+  .switcher-in::-webkit-scrollbar{display:none}
+  .sw-label{color:#fff;opacity:.9;font-size:13px;font-weight:800;align-self:center;white-space:nowrap;margin-right:4px}
+  .sw-btn{flex:0 0 auto;background:rgba(255,255,255,.14);color:#fff;border:1px solid rgba(255,255,255,.26);padding:8px 15px;border-radius:999px;font-size:13px;font-weight:700;cursor:pointer;transition:.2s;white-space:nowrap}
+  .sw-btn:hover{background:rgba(255,255,255,.28)}
+  .sw-btn.active{background:#fff;color:var(--brand-dark);border-color:#fff}
+  header.site{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.9);backdrop-filter:saturate(160%) blur(8px);border-bottom:1px solid var(--line)}
+  .header-in{display:flex;align-items:center;gap:12px;padding:12px 0}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+  .brand .logo{width:38px;height:38px;border-radius:calc(var(--radius) * .55);display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff}
+  .brand .logo svg{width:22px;height:22px}
+  .header-right{margin-left:auto;display:flex;align-items:center;gap:14px}
+  .tel{display:flex;flex-direction:column;line-height:1.15;text-align:right}
+  .tel small{font-size:11px;color:var(--muted)}
+  .tel b{font-size:19px;color:var(--brand-dark)}
+  .header-cta{padding:11px 18px;font-size:14px}
+  .hero{position:relative;overflow:hidden;background:var(--tint)}
+  .hero-deco{position:absolute;inset:0;z-index:0;opacity:.9}
+  .hero::before{content:"";position:absolute;inset:0;z-index:0;background:radial-gradient(1100px 480px at 88% -12%,color-mix(in srgb,var(--brand) 22%,transparent),transparent 60%),radial-gradient(820px 460px at -8% 8%,color-mix(in srgb,var(--accent) 16%,transparent),transparent 55%)}
+  .hero-in{position:relative;z-index:1;display:grid;grid-template-columns:1.1fr .9fr;gap:38px;align-items:center;padding:clamp(40px,6vw,64px) 0}
+  .hero h1{font-size:clamp(27px,5.4vw,44px);line-height:1.32;font-weight:var(--h-weight);letter-spacing:var(--h-tracking)}
+  .hero h1 .hl{color:var(--brand);position:relative;white-space:nowrap}
+  .hero h1 .hl::after{content:"";position:absolute;left:-2px;right:-2px;bottom:3px;height:11px;background:color-mix(in srgb,var(--accent) 42%,transparent);z-index:-1;border-radius:4px}
+  .hero-sub{font-size:16px;color:var(--muted);margin:18px 0 22px}
+  .hero-points{display:flex;flex-direction:column;gap:9px;margin-bottom:24px}
+  .hero-points span{display:inline-flex;gap:10px;align-items:center;font-weight:700;font-size:14.5px}
+  .hero-points span::before{content:"✓";display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--brand);color:#fff;font-size:12px;flex:0 0 auto}
+  .hero-cta{display:flex;flex-wrap:wrap;gap:12px}
+  .hero-cta .btn{flex:1 1 auto;min-width:186px}
+  .trust{display:flex;flex-wrap:wrap;gap:8px 18px;margin-top:18px;color:var(--muted);font-size:13px}
+  .trust b{color:var(--brand-dark)}
+  .hero-visual{display:flex;flex-direction:column;gap:16px}
+  .hero-art{border-radius:var(--radius);padding:14px;background:linear-gradient(160deg,#fff,color-mix(in srgb,var(--brand) 7%,#fff));border:1px solid var(--line);box-shadow:var(--shadow)}
+  .hero-art svg{width:100%;height:auto;display:block}
+  .hero-card{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:18px 20px;border:1px solid var(--line)}
+  .hero-card .hc-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .hero-card .hc-head b{font-size:14px}
+  .hero-card .hc-head small{color:var(--muted);font-size:12px}
+  .hc-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+  .hc-row:last-child{border-bottom:none}
+  .hc-row .p{font-weight:800;color:var(--brand-dark)}
+  /* 実績：4個 → 4列 / 2×2 / 1列 で常に偶数バランス */
+  .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:-30px;position:relative;z-index:2}
+  .stat{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;text-align:center;box-shadow:var(--shadow-sm)}
+  .stat .n{font-size:clamp(22px,3.4vw,30px);font-weight:900;color:var(--brand-dark);line-height:1}
+  .stat .n small{font-size:14px}
+  .stat .l{font-size:12.5px;color:var(--muted);margin-top:6px}
+  .worries{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .worry{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:20px;display:flex;gap:13px;box-shadow:var(--shadow-sm)}
+  .worry .q{flex:0 0 auto;width:34px;height:34px;border-radius:50%;background:color-mix(in srgb,var(--accent) 16%,#fff);color:var(--accent);font-weight:900;display:grid;place-items:center}
+  .worry p{font-weight:600;font-size:15px}
+  .worry-bridge{text-align:center;margin-top:26px}
+  .worry-bridge .arw{font-size:26px;color:var(--brand)}
+  .worry-bridge p{font-weight:800;font-size:clamp(17px,3vw,20px);margin-top:2px}
+  /* 強み：4個 → 4列 / 2×2 / 1列 */
+  .solves{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+  .solve{background:#fff;border-radius:var(--radius);padding:24px 20px;text-align:center;border:1px solid var(--line);box-shadow:var(--shadow-sm);transition:transform .2s,box-shadow .2s}
+  .solve:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+  .solve .ic{width:58px;height:58px;border-radius:calc(var(--radius) * .8);margin:0 auto 14px;display:grid;place-items:center;background:color-mix(in srgb,var(--brand) 12%,#fff)}
+  .solve .ic svg{width:28px;height:28px}
+  .solve h3{font-size:16.5px;margin-bottom:8px}
+  .solve p{font-size:13.5px;color:var(--muted)}
+  /* 事例：4個 → 2×2 固定（大きめ表示） */
+  .gallery{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .gcard{border-radius:var(--radius);overflow:hidden;border:1px solid var(--line);background:#fff;box-shadow:var(--shadow-sm)}
+  .gcard .pic{aspect-ratio:16/9;position:relative;display:grid;place-items:center;background:linear-gradient(150deg,color-mix(in srgb,var(--brand) 16%,#fff),color-mix(in srgb,var(--accent) 14%,#fff))}
+  .gcard .pic svg{width:34%;height:34%}
+  .gcard .tag{position:absolute;top:10px;left:10px;background:var(--brand-dark);color:#fff;font-size:11px;font-weight:800;padding:4px 10px;border-radius:999px}
+  .gcard .cap{padding:14px 16px;font-size:13.5px;font-weight:700}
+  .gcard .cap small{display:block;color:var(--muted);font-weight:500;margin-top:2px}
+  .gallery-note{text-align:center;color:var(--muted);font-size:12.5px;margin-top:16px}
+  /* 理由：4個 → 2×2 / 1列 */
+  .reasons{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .reason{background:#fff;border-radius:var(--radius);padding:24px;border:1px solid var(--line);box-shadow:var(--shadow-sm);display:flex;gap:16px;align-items:flex-start}
+  .reason .rc{flex:0 0 auto;width:50px;height:50px;border-radius:calc(var(--radius) * .7);display:grid;place-items:center;background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff}
+  .reason .rc svg{width:26px;height:26px}
+  .reason h3{font-size:17px;margin-bottom:5px}
+  .reason p{font-size:14px;color:var(--muted)}
+  /* 料金：4個 → 2×2 固定 */
+  .plans{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;align-items:stretch}
+  .plan{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px 22px;text-align:center;box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
+  .plan.featured{border:2px solid var(--brand);box-shadow:var(--shadow);position:relative}
+  .plan.featured .tag{position:absolute;top:-13px;left:50%;transform:translateX(-50%);background:var(--brand);color:#fff;font-size:12px;font-weight:800;padding:5px 14px;border-radius:999px;white-space:nowrap}
+  .plan h3{font-size:15.5px;margin-bottom:8px;color:var(--muted)}
+  .plan .price{font-size:30px;font-weight:900;color:var(--brand-dark);line-height:1.05}
+  .plan .price small{font-size:14px;color:var(--muted);font-weight:700}
+  .plan .desc{font-size:13px;color:var(--muted);margin:12px 0 18px;min-height:42px}
+  .plan .btn{margin-top:auto;width:100%;font-size:15px;padding:13px}
+  .price-note{text-align:center;color:var(--muted);font-size:13px;margin-top:18px}
+  /* 流れ：4ステップ → 4列 / 2×2 / 1列 */
+  .flow{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .step{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:22px 15px;text-align:center;position:relative;box-shadow:var(--shadow-sm)}
+  .step .stnum{width:32px;height:32px;border-radius:50%;background:var(--brand);color:#fff;font-weight:900;display:grid;place-items:center;margin:0 auto 10px}
+  .step .stic{display:grid;place-items:center;margin-bottom:6px}
+  .step .stic svg{width:26px;height:26px;color:var(--brand)}
+  .step h4{font-size:14.5px;margin-bottom:4px}
+  .step p{font-size:12.5px;color:var(--muted)}
+  /* 声：4個 → 2×2 固定 */
+  .voices{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .voice{background:#fff;border-radius:var(--radius);padding:24px;border:1px solid var(--line);box-shadow:var(--shadow-sm);display:flex;flex-direction:column}
+  .stars{color:#f5b301;font-size:16px;letter-spacing:2px;margin-bottom:10px}
+  .voice p{font-size:14.5px;margin-bottom:16px}
+  .voice .who{display:flex;align-items:center;gap:10px;margin-top:auto}
+  .voice .av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--brand),var(--brand-dark))}
+  .voice .who b{font-size:14px}
+  .voice .who small{display:block;color:var(--muted);font-size:12px}
+  .faq{max-width:780px;margin-inline:auto}
+  .qa{background:#fff;border:1px solid var(--line);border-radius:14px;margin-bottom:12px;overflow:hidden;box-shadow:var(--shadow-sm)}
+  .qa summary{list-style:none;cursor:pointer;padding:18px 20px;font-weight:700;font-size:15px;display:flex;gap:12px;align-items:flex-start}
+  .qa summary::-webkit-details-marker{display:none}
+  .qa summary .qmark{color:var(--brand);font-weight:900;flex:0 0 auto}
+  .qa summary::after{content:"＋";margin-left:auto;color:var(--brand);font-weight:900;transition:transform .2s}
+  .qa[open] summary::after{content:"−"}
+  .qa .a{padding:0 20px 18px 46px;color:var(--muted);font-size:14px}
+  .final{background:linear-gradient(135deg,var(--brand),var(--brand-dark));color:#fff;text-align:center;border-radius:26px;padding:clamp(34px,5vw,48px) 24px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+  .final .glow{position:absolute;inset:0;background:radial-gradient(600px 300px at 80% 0%,rgba(255,255,255,.18),transparent 60%)}
+  .final>*{position:relative}
+  .final h2{font-size:clamp(23px,4.6vw,32px);margin-bottom:10px}
+  .final p{opacity:.95;margin-bottom:24px;font-size:15px}
+  .final .hero-cta{justify-content:center}
+  .final .btn-primary{background:#fff;color:var(--brand-dark);box-shadow:0 10px 24px rgba(0,0,0,.22)}
+  .final .trust{justify-content:center;color:rgba(255,255,255,.92)}
+  .final .trust b{color:#fff}
+  footer.site{background:#141b24;color:#c7cfda;padding:40px 0 28px;font-size:14px}
+  .foot-in{display:flex;flex-wrap:wrap;gap:24px;justify-content:space-between;align-items:flex-start}
+  .foot-brand{font-weight:800;color:#fff;font-size:18px;margin-bottom:6px;display:flex;align-items:center;gap:10px}
+  .foot-brand .logo{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;background:var(--brand);color:#fff}
+  .foot-brand .logo svg{width:18px;height:18px}
+  .foot-info{font-size:13px;line-height:1.9;color:#9aa5b4}
+  .foot-note{margin-top:26px;padding-top:18px;border-top:1px solid #2a3441;font-size:12px;color:#7c8798;text-align:center}
+  .foot-note b{color:#aeb8c6}
+  .mobile-cta{position:fixed;left:0;right:0;bottom:0;z-index:60;display:none;gap:8px;padding:10px 12px;background:rgba(255,255,255,.96);backdrop-filter:blur(6px);border-top:1px solid var(--line);box-shadow:0 -6px 20px rgba(20,30,45,.08)}
+  .mobile-cta .btn{flex:1;padding:13px;font-size:15px}
+  .reveal{opacity:0;transform:translateY(20px);transition:opacity .55s ease,transform .55s ease}
+  .reveal.in{opacity:1;transform:none}
+  /* タブレット：4列ものを2×2へ（偶数なので必ず埋まる） */
+  @media (max-width:920px){
+    .hero-in{grid-template-columns:1fr;gap:26px}
+    .stats,.solves,.flow{grid-template-columns:repeat(2,1fr)}
+    .stats{margin-top:20px}
+    .reasons{grid-template-columns:1fr}
+  }
+  @media (max-width:640px){
+    .tel{display:none}
+    .worries,.solves,.plans,.voices,.gallery,.stats,.flow{grid-template-columns:1fr}
+    .hero-cta .btn{min-width:100%}
+    .mobile-cta{display:flex}
+    body{padding-bottom:66px}
+    .final{border-radius:18px}
+  }
+  @media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.reveal{opacity:1;transform:none;transition:none}}
+</style>
+</head>
+<body>
+
+<div class="ribbon">🧪 <b>ポートフォリオ用サンプル</b>：掲載の会社名・料金・口コミ・写真はすべて架空です。実在の企業とは関係ありません。</div>
+
+<div class="switcher"><div class="wrap switcher-in" id="switcher"><span class="sw-label">業界サンプル切替：</span></div></div>
+
+<header class="site">
+  <div class="wrap header-in">
+    <div class="brand"><span class="logo" data-el="logoIcon"></span><span data-el="brandName"></span></div>
+    <div class="header-right">
+      <div class="tel"><small data-el="telLabel"></small><b data-el="tel"></b></div>
+      <a href="#final" class="btn btn-primary header-cta">無料相談</a>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hero-deco" data-el="heroDeco"></div>
+  <div class="wrap hero-in">
+    <div class="reveal">
+      <span class="eyebrow" data-el="fvEyebrow"></span>
+      <h1 data-el="fvTitle"></h1>
+      <p class="hero-sub" data-el="fvSub"></p>
+      <div class="hero-points" data-el="fvPoints"></div>
+      <div class="hero-cta">
+        <a href="#final" class="btn btn-primary">📞 無料で相談する</a>
+        <a href="#final" class="btn btn-line">💬 LINEで相談する</a>
+      </div>
+      <div class="trust" data-el="fvTrust"></div>
+    </div>
+    <div class="hero-visual reveal">
+      <div class="hero-art" data-el="heroArt"></div>
+      <div class="hero-card">
+        <div class="hc-head"><b data-el="hcTitle"></b><small data-el="hcSub"></small></div>
+        <div data-el="hcRows"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section style="padding-bottom:0"><div class="wrap"><div class="stats reveal" data-el="stats"></div></div></section>
+
+<section class="section">
+  <div class="wrap center"><span class="eyebrow">CHECK</span><h2 class="sec-title">こんなお悩み、ありませんか？</h2><p class="sec-lead" data-el="worryLead"></p></div>
+  <div class="wrap" style="margin-top:26px">
+    <div class="worries reveal" data-el="worries"></div>
+    <div class="worry-bridge"><div class="arw">▼</div><p data-el="worrySolve"></p></div>
+  </div>
+</section>
+
+<section class="section tint">
+  <div class="wrap center"><span class="eyebrow">SOLUTION</span><h2 class="sec-title" data-el="solveTitle"></h2><p class="sec-lead" data-el="solveLead"></p></div>
+  <div class="wrap" style="margin-top:28px"><div class="solves reveal" data-el="solves"></div></div>
+</section>
+
+<section class="section">
+  <div class="wrap center"><span class="eyebrow">WORKS</span><h2 class="sec-title" data-el="galleryTitle"></h2><p class="sec-lead" data-el="galleryLead"></p></div>
+  <div class="wrap" style="margin-top:28px">
+    <div class="gallery reveal" data-el="gallery"></div>
+    <p class="gallery-note">※ サンプルのためイメージを掲載しています。実際の制作では、この枠にお客様の施工写真・店舗写真が入ります。</p>
+  </div>
+</section>
+
+<section class="section tint">
+  <div class="wrap center"><span class="eyebrow">WHY US</span><h2 class="sec-title" data-el="reasonTitle"></h2><p class="sec-lead">はじめての方にも、安心してお任せいただける理由があります。</p></div>
+  <div class="wrap" style="margin-top:28px"><div class="reasons reveal" data-el="reasons"></div></div>
+</section>
+
+<section class="section">
+  <div class="wrap center"><span class="eyebrow">PRICE</span><h2 class="sec-title" data-el="priceTitle"></h2><p class="sec-lead">料金は事前にしっかりご提示。あとから増える心配はありません。</p></div>
+  <div class="wrap" style="margin-top:28px">
+    <div class="plans reveal" data-el="plans"></div>
+    <p class="price-note" data-el="priceNote"></p>
+    <div class="center" style="margin-top:22px"><a href="#final" class="btn btn-primary">まずは無料で見積もりする</a></div>
+  </div>
+</section>
+
+<section class="section tint">
+  <div class="wrap center"><span class="eyebrow">FLOW</span><h2 class="sec-title">ご利用の流れ</h2><p class="sec-lead">お問い合わせから完了まで、わかりやすい4ステップです。</p></div>
+  <div class="wrap" style="margin-top:28px"><div class="flow reveal" data-el="flow"></div></div>
+</section>
+
+<section class="section">
+  <div class="wrap center"><span class="eyebrow">VOICE</span><h2 class="sec-title">お客様の声</h2><p class="sec-lead">実際にご利用いただいた方の声をご紹介します。</p></div>
+  <div class="wrap" style="margin-top:28px"><div class="voices reveal" data-el="voices"></div></div>
+</section>
+
+<section class="section tint">
+  <div class="wrap center"><span class="eyebrow">FAQ</span><h2 class="sec-title">よくあるご質問</h2><p class="sec-lead">ご不明な点はお気軽にご相談ください。</p></div>
+  <div class="wrap" style="margin-top:28px"><div class="faq reveal" data-el="faq"></div></div>
+</section>
+
+<section class="section" id="final">
+  <div class="wrap"><div class="final reveal"><div class="glow"></div>
+    <h2 data-el="finalTitle"></h2>
+    <p data-el="finalSub"></p>
+    <div class="hero-cta">
+      <a href="tel:0000000000" class="btn btn-primary">📞 電話で相談する</a>
+      <a href="#" class="btn btn-line">💬 LINEで相談する</a>
+    </div>
+    <div class="trust" data-el="finalTrust"></div>
+  </div></div>
+</section>
+
+<footer class="site">
+  <div class="wrap foot-in">
+    <div>
+      <div class="foot-brand"><span class="logo" data-el="footIcon"></span><span data-el="footName"></span></div>
+      <p class="foot-info" data-el="footInfo"></p>
+    </div>
+    <div class="foot-info">
+      <div>受付時間：9:00〜20:00（年中無休）</div>
+      <div>対応エリア：市内および近隣エリア</div>
+      <div>お支払い：現金・各種カード・電子マネー</div>
+    </div>
+  </div>
+  <div class="wrap foot-note"><b>※ このページはポートフォリオ用のサンプルLPです。</b><br>会社名・料金・口コミ・写真等はすべて架空の内容であり、実在する企業・団体とは一切関係ありません。</div>
+</footer>
+
+<div class="mobile-cta">
+  <a href="tel:0000000000" class="btn btn-primary">📞 電話</a>
+  <a href="#" class="btn btn-line">💬 LINE相談</a>
+</div>
+
+<script>
+/* SVGアイコン集（線ベース・currentColorで着色） */
+const I = {
+  bolt:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7z"/></svg>',
+  wallet:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="14" rx="2"/><path d="M16 13h.01M3 10h18"/></svg>',
+  muscle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20c0-4 2-6 6-6M10 14c3 0 4-2 4-5a3 3 0 0 0-6 0M18 20c1-3 2-6 0-9"/></svg>',
+  chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H8l-5 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+  hand:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11V5a1.5 1.5 0 0 1 3 0v6M12 11V4a1.5 1.5 0 0 1 3 0v7M15 11V6a1.5 1.5 0 0 1 3 0v8a6 6 0 0 1-6 6h-1a6 6 0 0 1-5-3l-2-4a1.5 1.5 0 0 1 2.6-1.5L9 13"/></svg>',
+  shield:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m9 12 2 2 4-4"/></svg>',
+  search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>',
+  cam:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-2h6l2 2h3v12H4z"/><circle cx="12" cy="13" r="3.5"/></svg>',
+  pin:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>',
+  clock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>',
+  smile:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg>',
+  recycle:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 7l2-3 3 5M17 8l1 4-5 1M8 16l-3 1 2-5"/><path d="M4 16l2 3h4M20 12l-2 4-4-1M9 4l3-1 2 3"/></svg>',
+  phone:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h4l2 5-3 2a12 12 0 0 0 6 6l2-3 5 2v4a2 2 0 0 1-2 2A17 17 0 0 1 2 6a2 2 0 0 1 2-2z"/></svg>',
+  clip:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="4" width="12" height="16" rx="2"/><path d="M9 4V3h6v1M9 10h6M9 14h4"/></svg>',
+  truck:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h11v9H3zM14 9h4l3 3v3h-7z"/><circle cx="7" cy="18" r="2"/><circle cx="17" cy="18" r="2"/></svg>',
+  spark:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2 2M16 16l2 2M18 6l-2 2M8 16l-2 2"/></svg>',
+  drop:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3s6 6 6 10a6 6 0 0 1-12 0c0-4 6-10 6-10z"/></svg>',
+  target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/></svg>',
+  meal:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 3v7a2 2 0 0 0 4 0V3M6 12v9M18 3c-2 0-3 2-3 5s1 4 3 4v9"/></svg>',
+  room:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10 12 3l9 7v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M9 21v-6h6v6"/></svg>',
+  wrench:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 7a4 4 0 0 1-5 5l-6 6 2 2 6-6a4 4 0 0 0 5-5l-2 2-2-2 2-2z"/></svg>',
+  house:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11 12 4l9 7M5 10v10h14V10"/></svg>',
+  roller:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="14" height="6" rx="1"/><path d="M11 10v3H8v8"/></svg>',
+  badge:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="9" r="6"/><path d="m9 14-2 7 5-3 5 3-2-7"/></svg>'
+};
+
+/* ヒーロー用イラスト（業界別） */
+const ART = {
+  cleanup:'<svg viewBox="0 0 240 168"><ellipse cx="120" cy="150" rx="96" ry="10" fill="rgba(0,0,0,.06)"/><rect x="18" y="92" width="48" height="46" rx="7" fill="var(--accent)"/><path d="M18 106h48M42 92v46" stroke="rgba(0,0,0,.14)" stroke-width="2"/><rect x="28" y="60" width="34" height="34" rx="6" fill="color-mix(in srgb,var(--accent) 65%,#fff)"/><path d="M28 74h34M45 60v34" stroke="rgba(0,0,0,.12)" stroke-width="2"/><rect x="82" y="66" width="86" height="60" rx="9" fill="var(--brand)"/><rect x="158" y="84" width="46" height="42" rx="9" fill="var(--brand-dark)"/><rect x="165" y="91" width="26" height="19" rx="4" fill="#eef7f1"/><circle cx="104" cy="130" r="14" fill="#2b2f36"/><circle cx="104" cy="130" r="5" fill="#c9ced6"/><circle cx="176" cy="130" r="14" fill="#2b2f36"/><circle cx="176" cy="130" r="5" fill="#c9ced6"/></svg>',
+  paint:'<svg viewBox="0 0 240 168"><ellipse cx="118" cy="152" rx="92" ry="9" fill="rgba(0,0,0,.06)"/><path d="M40 78 108 36 176 78Z" fill="var(--brand-dark)"/><rect x="52" y="78" width="112" height="74" rx="6" fill="var(--brand)"/><rect x="72" y="98" width="26" height="26" rx="3" fill="#eef2fb"/><rect x="118" y="98" width="26" height="54" rx="3" fill="color-mix(in srgb,var(--brand) 55%,#fff)"/><rect x="150" y="52" width="52" height="17" rx="4" fill="var(--accent)"/><path d="M150 60h-17v44" stroke="#5b6675" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M176 69q26 34 0 78" stroke="var(--accent)" stroke-width="11" fill="none" opacity=".4" stroke-linecap="round"/></svg>',
+  clinic:'<svg viewBox="0 0 240 168"><ellipse cx="120" cy="152" rx="80" ry="9" fill="rgba(0,0,0,.06)"/><circle cx="120" cy="44" r="19" fill="var(--brand)"/><rect x="107" y="64" width="26" height="72" rx="13" fill="var(--brand)"/><g fill="var(--accent)"><circle cx="120" cy="78" r="4.5"/><circle cx="120" cy="93" r="4.5"/><circle cx="120" cy="108" r="4.5"/><circle cx="120" cy="123" r="4.5"/></g><path d="M107 96q-32 6 -36 38" stroke="var(--brand)" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M133 96q32 6 36 38" stroke="var(--brand)" stroke-width="13" fill="none" stroke-linecap="round"/><path d="M186 40l4 11 11 4-11 4-4 11-4-11-11-4 11-4z" fill="var(--accent)"/></svg>',
+  cleaning:'<svg viewBox="0 0 240 168"><ellipse cx="112" cy="152" rx="78" ry="9" fill="rgba(0,0,0,.06)"/><rect x="72" y="72" width="50" height="70" rx="9" fill="var(--brand)"/><rect x="86" y="52" width="24" height="24" rx="4" fill="var(--brand-dark)"/><path d="M110 54h36v11h-22z" fill="var(--brand-dark)"/><rect x="80" y="90" width="34" height="28" rx="5" fill="#fff" opacity=".85"/><g fill="var(--accent)"><circle cx="162" cy="46" r="9"/><circle cx="184" cy="70" r="6"/><circle cx="170" cy="90" r="7"/></g><g fill="none" stroke="var(--accent)" stroke-width="3"><circle cx="162" cy="46" r="15"/></g><path d="M44 118l3 9 9 3-9 3-3 9-3-9-9-3 9-3z" fill="var(--brand)"/></svg>',
+  gym:'<svg viewBox="0 0 240 168"><ellipse cx="120" cy="152" rx="92" ry="9" fill="rgba(0,0,0,.06)"/><rect x="62" y="74" width="116" height="15" rx="7" fill="var(--brand)"/><rect x="40" y="56" width="22" height="52" rx="7" fill="var(--accent)"/><rect x="22" y="66" width="18" height="32" rx="6" fill="var(--brand)"/><rect x="178" y="56" width="22" height="52" rx="7" fill="var(--accent)"/><rect x="200" y="66" width="18" height="32" rx="6" fill="var(--brand)"/><path d="M28 132h38l11-26 13 46 13-34 9 14h72" fill="none" stroke="var(--accent)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/></svg>',
+  reform:'<svg viewBox="0 0 240 168"><ellipse cx="118" cy="152" rx="86" ry="9" fill="rgba(0,0,0,.06)"/><rect x="56" y="98" width="118" height="22" rx="7" fill="var(--brand)"/><rect x="70" y="120" width="90" height="8" rx="4" fill="var(--brand-dark)"/><path d="M115 98V66h34a13 13 0 0 0 13 -13" fill="none" stroke="var(--brand-dark)" stroke-width="11" stroke-linecap="round"/><rect x="152" y="42" width="18" height="15" rx="3" fill="var(--accent)"/><g stroke="#9fb0c9" stroke-width="4" stroke-linecap="round"><path d="M100 120v14M115 120v14M130 120v14"/></g><path d="M58 140l30-30" stroke="var(--accent)" stroke-width="11" stroke-linecap="round"/><circle cx="54" cy="144" r="12" fill="none" stroke="var(--accent)" stroke-width="8"/></svg>'
+};
+
+/* 背景パターン（業界別） */
+function patternCSS(name){
+  const c='color-mix(in srgb,var(--brand) 9%,transparent)', a='color-mix(in srgb,var(--brand) 13%,transparent)';
+  if(name==='grid')     return {backgroundImage:`linear-gradient(${c} 1px,transparent 1px),linear-gradient(90deg,${c} 1px,transparent 1px)`,backgroundSize:'28px 28px'};
+  if(name==='dots')     return {backgroundImage:`radial-gradient(${a} 1.7px,transparent 1.7px)`,backgroundSize:'20px 20px'};
+  if(name==='diagonal') return {backgroundImage:`repeating-linear-gradient(45deg,${c} 0 10px,transparent 10px 22px)`};
+  return {};
+}
+
+/* 6業界のデータ（各カード群はすべて偶数：実績4・強み4・事例4・料金4・声4、流れ4ステップ） */
+const DATA = {
+  cleanup:{
+    label:"🚚 不用品回収", art:"cleanup", icon:I.truck, pattern:"dots",
+    theme:{brand:"#2e9e5b",brandDark:"#14663a",accent:"#ff8a00",tint:"#f1faf4",radius:"18px",hw:900,ht:".01em"},
+    brandName:"すぐ片付け隊", tel:"0120-000-111", telLabel:"お電話でのご相談",
+    fvEyebrow:"最短即日対応・明朗会計",
+    fvTitle:'最短即日でお部屋すっきり。<br>不用品回収を<span class="hl">わかりやすい料金</span>で。',
+    fvSub:"引っ越し・遺品整理・粗大ごみ処分など、面倒な片付けはまるごとお任せください。電話・LINEでかんたんにご相談いただけます。",
+    fvPoints:["最短即日で回収に伺います","積み放題の明朗会計・追加料金なし","電話・LINEで写真見積り無料"],
+    fvTrust:["<b>見積り</b> 無料","<b>出張費</b> 0円","<b>キャンセル</b> 対応可"],
+    hcTitle:"料金の目安", hcSub:"まずは無料見積り",
+    hcRows:[["1点だけ回収","3,000円〜"],["軽トラ積み放題","14,800円〜"],["1R〜まるごと","29,800円〜"]],
+    stats:[["12,000",'<small>件</small>',"累計回収実績"],["98",'<small>%</small>',"お客様満足度"],["即日",'',"最短対応"],["年中無休",'',"受付対応"]],
+    worryLead:"不用品の処分、こんなことで困っていませんか？",
+    worries:["大きな家具・家電をどう捨てればいいかわからない","引っ越しまで時間がなく、すぐに片付けたい","遺品整理で何から手をつければいいか困っている","料金がわかりにくく、追加請求されないか不安"],
+    worrySolve:"その片付け、「すぐ片付け隊」がまるごと解決します。",
+    solveTitle:"面倒な片付けを、まるっと解決します", solveLead:"ご連絡いただければ、分別・運び出し・処分まですべて対応します。",
+    solves:[[I.bolt,"最短即日で回収","お急ぎの方も安心。ご相談当日の対応も可能です。"],[I.wallet,"明朗会計で安心","作業前に料金を確定。当日の追加請求はありません。"],[I.hand,"運び出しもお任せ","重い家具や2階からの搬出もスタッフが対応します。"],[I.recycle,"適正処分でエコ","回収品はリサイクル・リユースし、環境にも配慮します。"]],
+    galleryTitle:"回収事例", galleryLead:"お部屋のお片付けから、まるごと回収まで対応しています。",
+    gallery:[["Before → After","1Kまるごと回収","作業目安：約2時間"],["Before → After","大型家具の搬出","タンス・ベッドも安全に"],["回収事例","ゴミ屋敷の片付け","分別・清掃までまとめて"],["回収事例","オフィス什器の撤去","法人・店舗の不用品も対応"]],
+    reasonTitle:"「すぐ片付け隊」が選ばれる理由",
+    reasons:[[I.clock,"スピード対応","最短即日・早朝や夜間のご相談も可能。急ぎの片付けに強いのが強みです。"],[I.wallet,"わかりやすい料金","積み放題プランなど、事前に総額が見える料金体系。追加費用の不安がありません。"],[I.recycle,"適正な処分","回収した品目は法令に基づき適正に処分・リサイクルします。"],[I.smile,"丁寧な対応","遺品整理など、お気持ちに寄り添った丁寧な作業を心がけています。"]],
+    priceTitle:"わかりやすい料金プラン",
+    plans:[["少量プラン","3,000","円〜","家具1点・家電1点など、少しだけ処分したい方に。",false],["軽トラ積み放題","14,800","円〜","積めるだけ積んで定額。単身のお片付けにぴったり。",true],["まるごとプラン","29,800","円〜","1R〜のお部屋まるごと。引っ越し・退去前におすすめ。",false],["大量・定期プラン","要見積","","ゴミ屋敷や大量回収、定期回収などはまずご相談を。",false]],
+    priceNote:"※ 品目・量・作業環境により料金は変動します。正確な金額はまず無料見積もりでご確認ください。",
+    flow:[[I.phone,"お問い合わせ","電話・LINE・フォームから。"],[I.clip,"無料お見積り","品目を確認し料金を提示。"],[I.truck,"回収作業","分別・運び出しまで対応。"],[I.smile,"完了・お支払い","完了を確認後にお支払い。"]],
+    voices:[["S.K","40代・女性","引っ越し前日に急ぎで依頼しましたが、当日中に来てくれて助かりました。料金も見積もり通りで安心できました。"],["T.M","50代・男性","遺品整理でお願いしました。丁寧に対応してもらえて、気持ちの整理もつきました。"],["Y.N","30代・女性","LINEで写真を送るだけで見積もりが出て、とても楽でした。次もお願いしたいです。"],["R.T","20代・男性","即日で対応してもらえて助かりました。作業も早く、料金も明確で満足です。"]],
+    faq:[["土日や夜でも対応してもらえますか？","はい。土日祝・早朝や夜間のご相談も可能です。まずはご希望の日時をお知らせください。"],["見積もり後に追加料金はかかりますか？","作業前に総額を確定しますので、当日に品目が増えるなどの変更がない限り追加請求はありません。"],["どんな物でも回収できますか？","家具・家電・生活用品など幅広く対応します。回収できない品目もあるため、事前にご相談ください。"],["立ち会いは必要ですか？","基本的には立ち会いをお願いしていますが、状況により柔軟に対応いたします。"]],
+    finalTitle:"その片付け、今日から動き出せます。", finalSub:"見積もりは無料。電話・LINE・フォームからお気軽にご相談ください。",
+    finalTrust:["<b>見積り</b> 無料","<b>出張費</b> 0円","<b>最短</b> 即日対応"],
+    footInfo:"すぐ片付け隊（サンプル）<br>〒000-0000 ○○県○○市○○町0-0-0<br>TEL：0120-000-111"
+  },
+  paint:{
+    label:"🎨 外壁塗装", art:"paint", icon:I.roller, pattern:"grid",
+    theme:{brand:"#1c3b73",brandDark:"#132a54",accent:"#f5b301",tint:"#f4f7fc",radius:"12px",hw:900,ht:"0"},
+    brandName:"まもる塗装", tel:"0120-000-222", telLabel:"無料診断のご予約",
+    fvEyebrow:"地域密着・無料外壁診断",
+    fvTitle:'外壁のひび割れ・色あせ、<br><span class="hl">そのまま</span>にしていませんか？',
+    fvSub:"築10年を過ぎたお家は、そろそろ塗り替えのサイン。写真付きの診断結果で、必要な工事だけをわかりやすくご提案します。",
+    fvPoints:["プロが屋根・外壁を無料で診断","劣化箇所を写真付きで見える化","その場で契約を迫るしつこい営業なし"],
+    fvTrust:["<b>診断</b> 無料","<b>地域</b> 密着","<b>最長10年</b> 保証"],
+    hcTitle:"塗り替え費用の目安", hcSub:"戸建て30坪前後",
+    hcRows:[["シリコンプラン","69.8万円〜"],["ラジカルプラン","79.8万円〜"],["フッ素プラン","89.8万円〜"]],
+    stats:[["850",'<small>棟</small>',"施工実績"],["最長10",'<small>年</small>',"施工保証"],["無料",'',"外壁診断"],["自社",'',"職人施工"]],
+    worryLead:"お住まいのこんなサイン、見逃していませんか？",
+    worries:["外壁にひび割れ（クラック）が出てきた","壁を触ると白い粉がつく（チョーキング）","色あせ・コケ・汚れが目立ってきた","見積もりが高いのか安いのか判断できない"],
+    worrySolve:"その不安、「まもる塗装」の無料診断ではっきりします。",
+    solveTitle:"必要な工事だけを、正直にご提案します", solveLead:"まずは現地を診断し、写真で状態を見える化。過剰な工事はおすすめしません。",
+    solves:[[I.search,"無料の外壁診断","プロが屋根・外壁の状態を細かくチェックします。"],[I.cam,"写真付き見積り","劣化箇所を写真で確認。納得の上で判断できます。"],[I.shield,"保証とアフター","施工後の保証書を発行。塗った後も安心です。"],[I.pin,"地域密着で安心","地元での実績多数。工事後もすぐ駆けつけます。"]],
+    galleryTitle:"施工事例", galleryLead:"色あせた外壁が、塗り替えでよみがえります。",
+    gallery:[["Before → After","戸建て外壁塗装","シリコンプランで塗り替え"],["Before → After","屋根塗装","遮熱塗料で夏も快適に"],["施工事例","付帯部の塗装","雨樋・破風もまとめて"],["施工事例","ベランダ・鉄部塗装","細部までしっかり塗装"]],
+    reasonTitle:"「まもる塗装」が選ばれる理由",
+    reasons:[[I.pin,"地域密着","地元での施工実績が豊富。何かあればすぐに駆けつけます。"],[I.cam,"見える化した提案","写真と診断結果で、なぜその工事が必要かを丁寧にご説明します。"],[I.smile,"しつこい営業なし","その場での契約は求めません。ご家族でゆっくりご検討ください。"],[I.shield,"施工保証つき","使用塗料に応じた保証をお付けします。長く安心して暮らせます。"]],
+    priceTitle:"塗り替えプランと費用の目安",
+    plans:[["シリコンプラン","69.8万","円〜","コストと耐久性のバランス重視。まず検討したい定番。",false],["ラジカルプラン","79.8万","円〜","色あせに強く長持ち。人気No.1のおすすめ。",true],["フッ素プラン","89.8万","円〜","高耐久で塗り替え間隔を長く。トータルで経済的。",false],["遮熱プラン","99.8万","円〜","夏の暑さ対策に。屋根・外壁の遮熱塗装をご希望の方へ。",false]],
+    priceNote:"※ 建物の面積・劣化状況・付帯工事により費用は変わります。正確な金額は無料の現地診断でご確認ください。",
+    flow:[[I.phone,"お問い合わせ","電話・LINE・フォームから。"],[I.search,"無料診断・見積り","状態を確認し費用を明示。"],[I.roller,"施工","近隣挨拶から丁寧に。"],[I.shield,"完了・保証","保証書をお渡しします。"]],
+    voices:[["K.T","60代・男性","診断の写真で劣化の状態がよくわかりました。無理に高いプランを勧められず、信頼できました。"],["M.S","50代・女性","近所からの評判で依頼。挨拶や現場の管理も丁寧で、仕上がりにも満足しています。"],["H.I","40代・男性","相見積もりのつもりが、説明の丁寧さでこちらに決めました。保証があるのも安心です。"],["S.W","50代・男性","屋根と外壁をまとめて依頼。見積りが丁寧で、仕上がりもきれいでした。"]],
+    faq:[["診断や見積もりは本当に無料ですか？","はい、現地診断・お見積りは無料です。診断後に必ず契約いただく必要もありません。"],["工事中は家にいないとダメですか？","日中の外出は問題ありません。作業内容は都度ご報告し、鍵の管理などもご相談に応じます。"],["工事期間はどのくらいですか？","一般的な戸建てで10日〜2週間ほどが目安です。天候により前後する場合があります。"],["近所への配慮はしてもらえますか？","着工前に近隣へご挨拶を行い、飛散防止や清掃にも配慮して作業します。"]],
+    finalTitle:"まずは、お家の状態を知ることから。", finalSub:"無料の外壁診断を実施中。しつこい営業は一切ありません。お気軽にご相談ください。",
+    finalTrust:["<b>診断</b> 無料","<b>写真付き</b> 見積り","<b>施工</b> 保証あり"],
+    footInfo:"まもる塗装（サンプル）<br>〒000-0000 ○○県○○市○○町0-0-0<br>TEL：0120-000-222"
+  },
+  clinic:{
+    label:"💪 整体・整骨院", art:"clinic", icon:I.muscle, pattern:"",
+    theme:{brand:"#12857f",brandDark:"#0c5f5a",accent:"#c98a4b",tint:"#f4faf9",radius:"22px",hw:800,ht:".005em"},
+    brandName:"からだ調整ラボ", tel:"0120-000-333", telLabel:"ご予約・ご相談",
+    fvEyebrow:"完全予約制・初回体験あり",
+    fvTitle:'つらい肩こり・腰痛を、<br><span class="hl">根本から整える</span>整体院。',
+    fvSub:"その場しのぎではなく、姿勢や生活習慣まで見て根本改善へ。丁寧なカウンセリングと予約制で、待たずに通えます。",
+    fvPoints:["まずは気軽に試せる初回体験","原因から見極める丁寧なカウンセリング","夜20時まで受付・仕事帰りにもOK"],
+    fvTrust:["<b>完全</b> 予約制","<b>初回</b> 体験あり","<b>夜</b> 20時まで"],
+    hcTitle:"メニューと料金", hcSub:"初回体験がおすすめ",
+    hcRows:[["初回体験（カウンセリング込）","2,980円"],["通常施術","5,500円"],["回数券（5回）","24,750円"]],
+    stats:[["30,000",'<small>件</small>',"施術実績"],["92",'<small>%</small>',"再来院率"],["20時",'',"まで受付"],["国家",'<small>資格</small>',"有資格者が担当"]],
+    worryLead:"その不調、がまんし続けていませんか？",
+    worries:["肩こり・腰痛がずっと続いて、集中できない","マッサージに行っても、すぐ元に戻ってしまう","姿勢の悪さや猫背が気になっている","仕事終わりに通える院がなかなか見つからない"],
+    worrySolve:"その悩み、「からだ調整ラボ」で根本から整えましょう。",
+    solveTitle:"「戻らないからだ」を一緒につくります", solveLead:"痛みの原因を見極め、施術とセルフケアの両面から改善をサポートします。",
+    solves:[[I.chat,"丁寧なカウンセリング","お悩みや生活習慣を伺い、原因から一緒に考えます。"],[I.hand,"根本に届く施術","筋肉と骨格のバランスを整え、その場しのぎにしません。"],[I.clip,"セルフケア指導","ご自宅でできるケアもお伝えし、良い状態を保ちます。"],[I.clock,"通いやすい夜間受付","夜20時まで受付。お仕事帰りにも通えます。"]],
+    galleryTitle:"施術の様子", galleryLead:"落ち着いた空間で、おひとりずつ丁寧に対応します。",
+    gallery:[["院内の様子","清潔な施術スペース","完全予約制で待ち時間なし"],["施術の様子","姿勢・骨格の調整","国家資格者が担当"],["セルフケア","自宅ストレッチ指導","良い状態を長持ちさせる"],["設備","キッズスペース完備","お子様連れでも通いやすい"]],
+    reasonTitle:"「からだ調整ラボ」が選ばれる理由",
+    reasons:[[I.target,"原因からの改善","痛い所だけでなく、原因となる姿勢や動きから見直します。"],[I.clock,"通いやすい環境","夜20時まで受付・完全予約制。仕事帰りでも待たずに通えます。"],[I.smile,"初回体験で安心","まずはお試しいただける初回体験をご用意しています。"],[I.hand,"無理のない提案","過度な回数の押し売りはしません。ご希望に合わせて計画します。"]],
+    priceTitle:"メニュー・料金のご案内",
+    plans:[["初回体験","2,980","円","カウンセリング＋施術。まずはお試しいただけます。",true],["通常施術","5,500","円","全身のバランスを整える基本の施術です。",false],["回数券（5回）","24,750","円","継続ケアに。1回あたりお得に通えます。",false],["回数券（10回）","46,000","円","しっかり継続したい方に。1回あたり最もお得です。",false]],
+    priceNote:"※ お身体の状態により最適なメニューをご提案します。まずは初回体験でお気軽にご相談ください。",
+    flow:[[I.phone,"ご予約","電話・LINE・フォームから。"],[I.chat,"カウンセリング・検査","お悩みと姿勢・動きを確認。"],[I.hand,"施術","おひとりに合わせて丁寧に。"],[I.clip,"アフターケア・次回提案","セルフケアと通い方を案内。"]],
+    voices:[["A.K","30代・女性","デスクワークの肩こりがひどかったのですが、原因から説明してもらえて納得。数回で楽になりました。"],["R.S","40代・男性","仕事帰りの時間に予約できるのが助かります。毎回丁寧にみてもらえて安心です。"],["N.T","50代・女性","マッサージでは戻っていた腰の痛みが、姿勢の指導も含めて改善しました。通ってよかったです。"],["H.M","40代・女性","猫背が気になって通い始めました。姿勢のアドバイスももらえて助かっています。"]],
+    faq:[["初めてでも大丈夫ですか？","もちろんです。初回はカウンセリングを丁寧に行い、お身体の状態を確認してから施術します。"],["どのくらいのペースで通えばいいですか？","状態により異なりますが、まずは目安をご提案します。無理な回数をおすすめすることはありません。"],["仕事帰りでも通えますか？","夜20時まで受付、完全予約制です。お待たせせずご案内できるようご予約をおすすめしています。"],["どんな服装で行けばいいですか？","動きやすい服装がおすすめです。お着替えのご用意もありますのでご安心ください。"]],
+    finalTitle:"その痛み、根本から見直しませんか？", finalSub:"初回体験を実施中。丁寧なカウンセリングで、あなたに合った改善プランをご提案します。",
+    finalTrust:["<b>初回</b> 体験あり","<b>完全</b> 予約制","<b>夜</b> 20時まで"],
+    footInfo:"からだ調整ラボ（サンプル）<br>〒000-0000 ○○県○○市○○町0-0-0<br>TEL：0120-000-333"
+  },
+  cleaning:{
+    label:"✨ ハウスクリーニング", art:"cleaning", icon:I.spark, pattern:"dots",
+    theme:{brand:"#0fb0c4",brandDark:"#0a7f8e",accent:"#ff6b6b",tint:"#eefbfd",radius:"20px",hw:800,ht:".005em"},
+    brandName:"ピカ暮らしクリーン", tel:"0120-000-444", telLabel:"ご予約・お見積り",
+    fvEyebrow:"プロの技でまるごとピカピカ",
+    fvTitle:'落ちない汚れも、<br><span class="hl">プロにおまかせ</span>。',
+    fvSub:"エアコン内部・レンジフード・水回りなど、自分では手が届かない汚れを専用機材で徹底洗浄。見積り後の追加はありません。",
+    fvPoints:["エアコンは内部まで分解洗浄","女性スタッフの指名もOK","見積り後の追加料金なし"],
+    fvTrust:["<b>見積り</b> 無料","<b>女性</b> スタッフ在籍","<b>損害</b> 保険加入"],
+    hcTitle:"料金の目安", hcSub:"単品からセットまで",
+    hcRows:[["エアコン1台","8,800円〜"],["水回り5点セット","22,000円〜"],["空室まるごと","要見積り"]],
+    stats:[["9,500",'<small>件</small>',"累計清掃実績"],["90",'<small>%</small>',"リピート率"],["在籍",'',"女性スタッフ"],["保険",'',"加入済みで安心"]],
+    worryLead:"お掃除のこんなお悩み、ありませんか？",
+    worries:["エアコンのカビ臭・ホコリが気になる","レンジフードの油汚れが自分では落とせない","浴室の水垢やカビがこびりついている","引っ越し前後の大掃除に手が回らない"],
+    worrySolve:"その汚れ、「ピカ暮らしクリーン」がまとめてピカピカにします。",
+    solveTitle:"プロの機材と技術で、根こそぎキレイに", solveLead:"市販品では落ちにくい汚れも、専用の洗剤と機材で徹底的に洗浄します。",
+    solves:[[I.spark,"分解洗浄で徹底的に","エアコンやレンジフードは分解して内部まで洗浄します。"],[I.shield,"安心の損害保険","万が一の破損にも備え、損害保険に加入しています。"],[I.smile,"女性スタッフ指名OK","お一人暮らしの方も安心してご依頼いただけます。"],[I.wallet,"明朗会計で安心","作業前にお見積り。あとから増える心配はありません。"]],
+    galleryTitle:"清掃事例", galleryLead:"Before/After で仕上がりの違いをご覧ください。",
+    gallery:[["Before → After","エアコン内部洗浄","カビ・ホコリを一掃"],["Before → After","レンジフードの油汚れ","分解して丸洗い"],["Before → After","浴室の水垢・カビ","専用洗剤でピカピカに"],["Before → After","トイレの黄ばみ除去","除菌までしっかり"]],
+    reasonTitle:"「ピカ暮らしクリーン」が選ばれる理由",
+    reasons:[[I.spark,"プロの仕上がり","市販品では難しい汚れも、専用機材で根こそぎ落とします。"],[I.wallet,"明朗な料金","作業前にお見積り。作業後の追加請求はありません。"],[I.smile,"指名・時間の相談OK","女性スタッフ指名や、ご都合に合わせた時間調整に対応します。"],[I.shield,"安心の保険加入","損害保険に加入。万が一の際も補償があり安心です。"]],
+    priceTitle:"わかりやすい料金プラン",
+    plans:[["単品プラン","8,800","円〜","エアコン1台・レンジフードなど、気になる1か所から。",false],["水回りセット","22,000","円〜","キッチン・浴室・洗面・トイレなどをまとめてお得に。",true],["空室クリーニング","要見積","","退去・引っ越し時のお部屋まるごと清掃に。",false],["定期おそうじ","要見積","","月1回など、定期的にキレイを保ちたい方に。",false]],
+    priceNote:"※ 汚れ具合・設備の種類・広さにより料金は変動します。正確な金額は無料見積もりでご確認ください。",
+    flow:[[I.phone,"ご予約","電話・LINE・フォームから。"],[I.chat,"事前確認・お見積り","汚れ具合・設備を確認し提示。"],[I.spark,"当日清掃","専用機材で徹底洗浄。"],[I.smile,"仕上げ確認・完了","一緒に確認しお支払い。"]],
+    voices:[["M.A","30代・女性","エアコンの臭いが気になって依頼。分解洗浄で驚くほどキレイになり、風も気持ちよくなりました。"],["K.H","40代・男性","水回りセットをお願いしました。浴室の水垢が落ちて新品みたいです。追加料金もなく安心でした。"],["Y.S","20代・女性","女性スタッフを指名できたので、一人暮らしでも気兼ねなく頼めました。対応も丁寧でした。"],["T.I","30代・男性","レンジフードの油汚れがすっきり。分解して洗ってもらえるのは違いますね。"]],
+    faq:[["作業中は立ち会いが必要ですか？","基本的には立ち会いをお願いしていますが、状況に応じてご相談も可能です。"],["洗剤は安全なものですか？","素材や設備に合わせた洗剤を使用します。小さなお子様やペットがいるご家庭もご相談ください。"],["予約はどのくらい前に必要ですか？","繁忙期は埋まりやすいため、お早めのご予約がおすすめです。空き状況はお問い合わせください。"],["エアコンのメーカーが特殊でも大丈夫ですか？","多くのメーカー・機種に対応していますが、お掃除機能付きなど一部は事前確認が必要です。"]],
+    finalTitle:"気になる汚れ、まとめてスッキリ。", finalSub:"お見積りは無料。電話・LINE・フォームからお気軽にご相談ください。",
+    finalTrust:["<b>見積り</b> 無料","<b>女性</b> スタッフ指名OK","<b>保険</b> 加入済み"],
+    footInfo:"ピカ暮らしクリーン（サンプル）<br>〒000-0000 ○○県○○市○○町0-0-0<br>TEL：0120-000-444"
+  },
+  gym:{
+    label:"🏋️ パーソナルジム", art:"gym", icon:I.muscle, pattern:"diagonal",
+    theme:{brand:"#1c2229",brandDark:"#0e1216",accent:"#e0483d",tint:"#f2f3f5",radius:"8px",hw:900,ht:".02em"},
+    brandName:"鍛錬ジム RISE", tel:"0120-000-555", telLabel:"無料カウンセリング",
+    fvEyebrow:"完全個室・マンツーマン",
+    fvTitle:'3か月で、<span class="hl">変わる</span>。<br>あなた専用のトレーニング。',
+    fvSub:"運動も食事も、専属トレーナーが二人三脚でサポート。無理な食事制限に頼らず、リバウンドしにくい体づくりを目指します。",
+    fvPoints:["完全個室でマンツーマン指導","LINEでの食事サポート込み","ウェア・シューズ無料で手ぶらOK"],
+    fvTrust:["<b>体験</b> 3,000円","<b>完全</b> 個室","<b>返金</b> 保証あり"],
+    hcTitle:"料金の目安", hcSub:"体験から始められます",
+    hcRows:[["体験トレーニング","3,000円"],["月4回プラン","27,500円〜"],["3ヶ月集中コース","要相談"]],
+    stats:[["89",'<small>%</small>',"会員継続率"],["-6.2",'<small>kg</small>',"平均変化"],["個室",'',"完全マンツーマン"],["返金",'',"保証つき"]],
+    worryLead:"こんな挫折、経験ありませんか？",
+    worries:["自己流の筋トレが続かず、結果が出ない","ダイエットしてもすぐリバウンドしてしまう","ジムに通っても何をすればいいかわからない","人目が気になって集中できない"],
+    worrySolve:"その悩み、「鍛錬ジム RISE」の専属サポートで乗り越えられます。",
+    solveTitle:"続けられる仕組みで、結果につなげます", solveLead:"あなたの目標と生活に合わせて、運動と食事の両面から設計します。",
+    solves:[[I.target,"専用プログラム","目標・体力に合わせて、あなただけのメニューを設計します。"],[I.meal,"食事サポート","無理な制限なし。LINEで食事のアドバイスを継続します。"],[I.muscle,"マンツーマン指導","完全個室で、人目を気にせず集中して取り組めます。"],[I.shield,"返金保証で安心","一定条件のもと返金保証。はじめてでも安心です。"]],
+    galleryTitle:"変化の事例", galleryLead:"3か月で、体は確かに変わります。",
+    gallery:[["Before → After","3ヶ月集中コース","無理のない食事管理で"],["トレーニング","マンツーマン指導","フォームから丁寧に"],["食事サポート","LINEで継続フォロー","日々の食事を見える化"],["設備","完全個室のジム","人目を気にせず集中"]],
+    reasonTitle:"「鍛錬ジム RISE」が選ばれる理由",
+    reasons:[[I.target,"目標から逆算","なりたい姿から逆算した、続けられる現実的なプランを組みます。"],[I.meal,"食べて変える食事法","極端な制限はしません。リバウンドしにくい習慣づくりを重視します。"],[I.muscle,"完全個室・手ぶら","ウェアやシューズは無料貸出。仕事帰りにそのまま通えます。"],[I.shield,"返金保証つき","一定条件のもと返金保証をご用意。安心して始められます。"]],
+    priceTitle:"料金プラン",
+    plans:[["体験トレーニング","3,000","円","まずはお試し。カウンセリング＋トレーニング体験。",false],["月4回プラン","27,500","円〜","週1ペースで無理なく継続したい方に。",true],["3ヶ月集中コース","要相談","","本気で結果を出したい方向けの集中プログラム。",false],["ペア・友割プラン","要相談","","ご友人・ご家族と一緒に。お得に続けられます。",false]],
+    priceNote:"※ 目標・回数により最適なプランをご提案します。まずは無料カウンセリングでご相談ください。",
+    flow:[[I.chat,"無料カウンセリング","目標・生活習慣をヒアリング。"],[I.target,"体験・プラン設計","体験のうえ専用メニュー作成。"],[I.bolt,"トレーニング","マンツーマンで実施。"],[I.clip,"定期チェック","体組成と食事を見直し。"]],
+    voices:[["T.K","30代・男性","独学で挫折続きでしたが、フォームから教わり3ヶ月で見た目が大きく変わりました。食事も続けやすかったです。"],["M.N","40代・女性","完全個室なので人目を気にせず集中できました。無理な食事制限がなく、リバウンドもしていません。"],["S.Y","20代・男性","LINEの食事サポートが本当に助かりました。何を食べればいいか毎回相談できて心強かったです。"],["K.W","30代・女性","運動が苦手でしたが、基礎から教えてもらえて続けられています。"]],
+    faq:[["運動経験がなくても大丈夫ですか？","もちろんです。お一人おひとりの体力に合わせて、基礎から丁寧に指導します。"],["食事制限はきついですか？","極端な制限はしません。無理なく続けられる食習慣づくりを一緒に進めます。"],["持ち物は必要ですか？","ウェア・シューズ・タオルは無料で貸し出しています。手ぶらでお越しいただけます。"],["どのくらいで効果が出ますか？","個人差はありますが、多くの方が2〜3か月で体の変化を実感されています。"]],
+    finalTitle:"なりたい自分に、今日から。", finalSub:"まずは無料カウンセリングから。体験トレーニングもご用意しています。",
+    finalTrust:["<b>体験</b> 3,000円","<b>完全</b> 個室","<b>返金</b> 保証あり"],
+    footInfo:"鍛錬ジム RISE（サンプル）<br>〒000-0000 ○○県○○市○○町0-0-0<br>TEL：0120-000-555"
+  },
+  reform:{
+    label:"🔧 水回りリフォーム", art:"reform", icon:I.wrench, pattern:"grid",
+    theme:{brand:"#2f5d50",brandDark:"#1e3f36",accent:"#d98b3a",tint:"#f2f6f4",radius:"10px",hw:800,ht:".005em"},
+    brandName:"住まいるリペア工房", tel:"0120-000-666", telLabel:"無料の現地調査",
+    fvEyebrow:"小さな困りごとから、まるごと工事まで",
+    fvTitle:'蛇口のポタポタ、<br><span class="hl">そのまま</span>にしていませんか？',
+    fvSub:"キッチン・浴室・トイレの修理から交換・リフォームまで、地域の職人が対応。現地調査とお見積りは無料です。",
+    fvPoints:["現地調査・お見積りは無料","ちょっとした修理は最短即日対応","施工後の保証つきで安心"],
+    fvTrust:["<b>調査</b> 無料","<b>最短</b> 即日","<b>施工</b> 保証"],
+    hcTitle:"料金の目安", hcSub:"修理から交換まで",
+    hcRows:[["蛇口・水漏れ修理","8,800円〜"],["トイレ交換","55,000円〜"],["浴室リフォーム","要見積り"]],
+    stats:[["6,300",'<small>件</small>',"対応実績"],["即日",'',"最短対応"],["保証",'',"施工保証つき"],["自社",'',"職人が対応"]],
+    worryLead:"水回りのこんな困りごと、ありませんか？",
+    worries:["蛇口やシャワーから水漏れしている","トイレの流れが悪い・古くて交換したい","浴室が寒い・掃除しにくく作り替えたい","どこに頼めばいいか、費用の相場もわからない"],
+    worrySolve:"その困りごと、「住まいるリペア工房」が丸ごと引き受けます。",
+    solveTitle:"小さな修理から、まるごと工事まで", solveLead:"部分修理も大規模リフォームも、地域の職人が責任を持って対応します。",
+    solves:[[I.search,"無料の現地調査","状態を確認し、必要な工事だけをご提案します。"],[I.bolt,"最短即日の修理","水漏れなどのお急ぎの修理にも素早く対応します。"],[I.shield,"施工保証つき","工事後の保証をお付けし、アフターも対応します。"],[I.wallet,"わかりやすい見積り","内訳のわかる見積りで、費用の不安を解消します。"]],
+    galleryTitle:"施工事例", galleryLead:"古くなった水回りが、使いやすく生まれ変わります。",
+    gallery:[["Before → After","キッチン交換","使いやすい最新設備に"],["Before → After","トイレ交換","節水・お掃除ラクに"],["Before → After","浴室リフォーム","暖かく滑りにくい浴室へ"],["Before → After","洗面台の交換","収納力もアップ"]],
+    reasonTitle:"「住まいるリペア工房」が選ばれる理由",
+    reasons:[[I.wrench,"職人が直接対応","下請け任せにせず、経験ある職人が丁寧に施工します。"],[I.wallet,"わかりやすい見積り","現地調査のうえ、内訳がわかる見積りをご提示します。"],[I.bolt,"スピード対応","水漏れなどの緊急時も、最短即日で駆けつけます。"],[I.shield,"施工保証つき","工事内容に応じた保証で、施工後も安心です。"]],
+    priceTitle:"料金の目安",
+    plans:[["修理プラン","8,800","円〜","蛇口交換・水漏れなど、部分的な修理に。",false],["交換プラン","55,000","円〜","トイレ・洗面など、設備の交換に。",true],["リフォーム","要見積","","浴室・キッチンのまるごとリフォームに。",false],["点検・メンテ","5,500","円〜","定期点検や小修繕に。長く安心して使えます。",false]],
+    priceNote:"※ 設備の種類・工事範囲・現場状況により費用は変わります。正確な金額は無料の現地調査でご確認ください。",
+    flow:[[I.phone,"お問い合わせ","電話・LINE・フォームから。"],[I.search,"現地調査・お見積り","状態を確認し内訳を提示。"],[I.wrench,"施工","職人が丁寧に工事。"],[I.shield,"完了・保証","保証書をお渡し。"]],
+    voices:[["H.K","50代・男性","キッチンの水漏れで相談。即日で来てくれて助かりました。見積りも明確で安心できました。"],["Y.T","60代・女性","古いトイレを交換。掃除がラクになり、水道代も下がった気がします。丁寧な工事でした。"],["N.S","40代・女性","浴室リフォームをお願いしました。寒い浴室が暖かくなり、家族みんな満足しています。"],["M.O","50代・男性","蛇口の水漏れをすぐ直してもらえました。小さな依頼でも快く対応してくれます。"]],
+    faq:[["小さな修理だけでも来てもらえますか？","はい。蛇口のパッキン交換など、小規模な修理も歓迎です。お気軽にご相談ください。"],["見積り後に断っても大丈夫ですか？","もちろんです。現地調査・お見積りは無料で、その後のご契約は自由です。"],["工事はどのくらいかかりますか？","内容によります。修理は当日〜、設備交換は半日〜1日、浴室リフォームは数日が目安です。"],["古い建物でも対応できますか？","築年数の古いお住まいも対応実績があります。現地調査のうえで最適な方法をご提案します。"]],
+    finalTitle:"水回りの困りごと、まず相談から。", finalSub:"現地調査・お見積りは無料。電話・LINE・フォームからお気軽にご相談ください。",
+    finalTrust:["<b>調査</b> 無料","<b>最短</b> 即日対応","<b>施工</b> 保証あり"],
+    footInfo:"住まいるリペア工房（サンプル）<br>〒000-0000 ○○県○○市○○町0-0-0<br>TEL：0120-000-666"
+  }
+};
+
+const el = (n)=>document.querySelector(`[data-el="${n}"]`);
+
+function render(key){
+  const d=DATA[key], t=d.theme, r=document.documentElement.style;
+  r.setProperty('--brand',t.brand); r.setProperty('--brand-dark',t.brandDark);
+  r.setProperty('--accent',t.accent); r.setProperty('--tint',t.tint);
+  r.setProperty('--radius',t.radius); r.setProperty('--h-weight',t.hw); r.setProperty('--h-tracking',t.ht);
+
+  const deco=el('heroDeco'); deco.removeAttribute('style'); Object.assign(deco.style,patternCSS(d.pattern));
+
+  el('logoIcon').innerHTML=d.icon; el('footIcon').innerHTML=d.icon;
+  el('brandName').textContent=d.brandName; el('footName').textContent=d.brandName;
+  el('tel').textContent=d.tel; el('telLabel').textContent=d.telLabel; el('footInfo').innerHTML=d.footInfo;
+
+  el('fvEyebrow').textContent=d.fvEyebrow; el('fvTitle').innerHTML=d.fvTitle; el('fvSub').textContent=d.fvSub;
+  el('fvPoints').innerHTML=d.fvPoints.map(p=>`<span>${p}</span>`).join('');
+  el('fvTrust').innerHTML=d.fvTrust.map(x=>`<span>${x}</span>`).join('');
+  el('heroArt').innerHTML=ART[d.art];
+  el('hcTitle').textContent=d.hcTitle; el('hcSub').textContent=d.hcSub;
+  el('hcRows').innerHTML=d.hcRows.map(([l,p])=>`<div class="hc-row"><span>${l}</span><span class="p">${p}</span></div>`).join('');
+
+  el('stats').innerHTML=d.stats.map(([n,u,l])=>`<div class="stat"><div class="n">${n}${u}</div><div class="l">${l}</div></div>`).join('');
+
+  el('worryLead').textContent=d.worryLead;
+  el('worries').innerHTML=d.worries.map(w=>`<div class="worry"><span class="q">?</span><p>${w}</p></div>`).join('');
+  el('worrySolve').textContent=d.worrySolve;
+
+  el('solveTitle').textContent=d.solveTitle; el('solveLead').textContent=d.solveLead;
+  el('solves').innerHTML=d.solves.map(([ic,h,p])=>`<div class="solve"><div class="ic" style="color:var(--brand)">${ic}</div><h3>${h}</h3><p>${p}</p></div>`).join('');
+
+  el('galleryTitle').textContent=d.galleryTitle; el('galleryLead').textContent=d.galleryLead;
+  el('gallery').innerHTML=d.gallery.map(([tag,cap,sub])=>`<div class="gcard"><div class="pic"><span class="tag">${tag}</span><span style="color:var(--brand)">${d.icon}</span></div><div class="cap">${cap}<small>${sub}</small></div></div>`).join('');
+
+  el('reasonTitle').textContent=d.reasonTitle;
+  el('reasons').innerHTML=d.reasons.map(([ic,h,p])=>`<div class="reason"><span class="rc">${ic}</span><div><h3>${h}</h3><p>${p}</p></div></div>`).join('');
+
+  el('priceTitle').textContent=d.priceTitle;
+  el('plans').innerHTML=d.plans.map(([name,price,unit,desc,f])=>`<div class="plan${f?' featured':''}">${f?'<span class="tag">おすすめ</span>':''}<h3>${name}</h3><div class="price">${price}<small>${unit}</small></div><p class="desc">${desc}</p><a href="#final" class="btn btn-ghost">無料見積りへ</a></div>`).join('');
+  el('priceNote').textContent=d.priceNote;
+
+  el('flow').innerHTML=d.flow.map(([ic,h,p],i)=>`<div class="step"><div class="stnum">${i+1}</div><div class="stic">${ic}</div><h4>${h}</h4><p>${p}</p></div>`).join('');
+
+  el('voices').innerHTML=d.voices.map(([init,attr,text])=>`<div class="voice"><div class="stars">★★★★★</div><p>${text}</p><div class="who"><span class="av">${init.charAt(0)}</span><div><b>${init} 様</b><small>${attr}</small></div></div></div>`).join('');
+
+  el('faq').innerHTML=d.faq.map(([q,a])=>`<details class="qa"><summary><span class="qmark">Q.</span>${q}</summary><div class="a">${a}</div></details>`).join('');
+
+  el('finalTitle').textContent=d.finalTitle; el('finalSub').textContent=d.finalSub;
+  el('finalTrust').innerHTML=d.finalTrust.map(x=>`<span>${x}</span>`).join('');
+
+  const telHref='tel:'+d.tel.replace(/[^0-9]/g,'');
+  document.querySelectorAll('a[href^="tel:"]').forEach(a=>a.setAttribute('href',telHref));
+
+  document.querySelectorAll('.sw-btn').forEach(b=>b.classList.toggle('active',b.dataset.key===key));
+  requestAnimationFrame(runReveal);
+}
+
+const sw=document.getElementById('switcher');
+Object.entries(DATA).forEach(([key,d])=>{
+  const b=document.createElement('button');
+  b.className='sw-btn'; b.dataset.key=key; b.textContent=d.label;
+  b.addEventListener('click',()=>{ render(key); window.scrollTo({top:0,behavior:'smooth'}); });
+  sw.appendChild(b);
+});
+
+function runReveal(){
+  const io=new IntersectionObserver((es)=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.1});
+  document.querySelectorAll('.reveal:not(.in)').forEach(x=>io.observe(x));
+}
+
+render('cleanup');
+runReveal();
+</script>
+</body>
+</html>
